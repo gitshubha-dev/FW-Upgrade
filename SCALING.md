@@ -4,7 +4,7 @@ The core design carries over unchanged: a per-device state machine stored in a d
 scheduler that admits work up to a limit, timeouts on every waiting state, and compare-and-set
 state changes. What changes at this scale is the infrastructure around it.
 
-## What breaks first
+## Challenges with the existing setup
 
 | At 1,000 devices | At 10 million devices |
 |---|---|
@@ -17,17 +17,11 @@ state changes. What changes at this scale is the infrastructure around it.
 ## Multiple controller instances
 
 - **Stateless controllers behind a load balancer.** Any instance can handle any device's inform,
-  because all state is in the database. The current design already keeps nothing in memory.
+  because all state is in the database.
 - **Postgres (or another shared, row-locking database)** in place of SQLite, with the existing
   indexes on `(device_id, campaign_id)` and `(state, updated_at)`. At 15 M rows per campaign,
   partition `device_upgrades` by campaign, and shard by device ID if one primary isn't enough.
-  All SQL already lives in `db.py`.
-- **Compare-and-set stays the core safety mechanism.** Every transition is already
-  `UPDATE ... WHERE state = <expected>`, so two instances racing on one device cannot both apply.
-- **Scheduler work is partitioned, not duplicated.** Each instance claims a batch of PENDING rows
-  atomically (`SELECT ... FOR UPDATE SKIP LOCKED LIMIT n`), or owns a hash range of device IDs.
-  Timeout scanning is partitioned the same way. `maxConcurrent` becomes a global budget, kept as
-  a counter in the database or Redis and checked before each claim.
+- **Divide scheduler jobs across instances to avoid duplicate processing** of devices and timeouts. Use a shared database/Redis counter to enforce the global concurrent firmware upgrade limit across all instances.
 
 ## Rollout in waves, not one campaign
 
