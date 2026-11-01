@@ -39,8 +39,6 @@ simulator's hidden profiles:
 | reject | 36 | FAILED | REJECTED UNSUPPORTED_IMAGE |
 | offline | 48 | TIMED_OUT | No callback after 3 nudges |
 
-That accounts for all 1,000 devices. In total, 74 successes were decided from the reported version,
-
 ### Observations from the dashboard
 
 ![Campaign dashboard](results/dashboard-1.png)
