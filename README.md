@@ -32,7 +32,7 @@ This starts four containers:
 
 | Service | URL | Purpose |
 |---|---|---|
-| controller | http://localhost:8080 | This project. Interactive API docs at `/docs`, metrics at `/metrics` |
+| controller | http://localhost:8080 | Interactive API docs at `/docs`, metrics at `/metrics` |
 | simulator | http://localhost:9000 | The provided device simulator, 1,000 devices on 1.0.0 |
 | prometheus | http://localhost:9090 | Scrapes `controller:8080/metrics` every 5 s |
 | grafana | http://localhost:3000 | Pre-provisioned "Firmware campaign" dashboard, no login |
@@ -89,9 +89,9 @@ For quick experiments the simulator accepts `PERIODIC_INFORM_SEC`, `REBOOT_MAX_S
 
 ---
 
-## API
+## Restful API (Controller)
 
-### Operator
+### User (Operator) API's
 
 | Method and path | Description | Responses |
 |---|---|---|
@@ -113,7 +113,7 @@ Example progress response:
 }
 ```
 
-### Device (called by the simulator)
+### Device API's (called by the simulator)
 
 | Method and path | Description |
 |---|---|
