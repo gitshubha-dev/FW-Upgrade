@@ -1,0 +1,1 @@
+{"id":1,"status":"HALTED","targetVersion":"2.0.0","totalDevices":1000,"counts":{"FAILED":17,"PENDING":858,"SUCCEEDED":120,"TIMED_OUT":4,"UPGRADING":1},"failureRatePercent":14.9,"finishedDevices":141}

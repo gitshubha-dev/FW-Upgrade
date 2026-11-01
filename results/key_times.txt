@@ -1,0 +1,2 @@
+controller-1  | 2026-11-01 08:04:03,444 INFO operator  campaign 1 created with 1000 devices
+controller-1  | 2026-11-01 08:28:24,521 INFO scheduler  campaign 1 COMPLETED

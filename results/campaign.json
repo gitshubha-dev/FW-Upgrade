@@ -1,0 +1,1 @@
+{"id":1,"status":"COMPLETED","targetVersion":"2.0.0","totalDevices":1000,"counts":{"FAILED":103,"SUCCEEDED":848,"TIMED_OUT":49},"failureRatePercent":15.2,"finishedDevices":1000}

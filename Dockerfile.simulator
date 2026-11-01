@@ -1,0 +1,11 @@
+# Simulator image: stands in for the device fleet. Not part of the controller.
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+RUN pip install --no-cache-dir fastapi uvicorn httpx
+COPY device_simulator.py ./
+
+EXPOSE 9000
+CMD ["uvicorn", "device_simulator:app", "--host", "0.0.0.0", "--port", "9000", "--log-level", "warning"]

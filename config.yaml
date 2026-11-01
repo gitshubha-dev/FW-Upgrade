@@ -1,0 +1,17 @@
+# Controller tuning parameters.
+# SIMULATOR_URL and DB_PATH can be overridden with environment variables (Docker Compose does this).
+
+simulator_url: http://localhost:9000   # where the device simulator runs
+db_path: controller.db                 # SQLite file holding all campaign and device state
+
+scheduler:
+  tick_seconds: 2            # how often the scheduler nudges devices and checks timeouts
+
+timeouts:
+  notify_timeout_sec: 30     # NOTIFIED: a nudged device calls back within ~3 s, or not at all
+  max_nudges: 3              # nudges per device before it is marked TIMED_OUT
+  result_timeout_sec: 900    # DOWNLOAD_SENT / UPGRADING: download + reboot (~4.5 min)
+                             # plus late reports (up to ~10 min), with margin
+
+auto_halt:
+  min_sample_size: 200        # finished devices needed before the failure rate can halt a campaign

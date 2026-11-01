@@ -1,0 +1,1 @@
+controller-1  | 2026-11-01 07:56:03,676 INFO scheduler  campaign 1 HALTED: failure rate 26.9% > 20.0% after 52 finished devices

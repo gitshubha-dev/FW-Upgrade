@@ -1,0 +1,52 @@
+services:
+  controller:
+    build: .                           # uses Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SIMULATOR_URL: http://simulator:9000
+      DB_PATH: /data/controller.db
+    volumes:
+      - controller-data:/data          # keeps the database across controller restarts
+
+  simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile.simulator
+    ports:
+      - "9000:9000"
+    environment:
+      CONTROLLER_URL: http://controller:8080
+      DEVICE_COUNT: ${DEVICE_COUNT:-1000}
+      SEED: ${SEED:-42}
+    depends_on:
+      - controller
+
+  # Monitoring: Prometheus collects /metrics, Grafana shows the dashboard at http://localhost:3000
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - controller
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"         # open the dashboard without logging in
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/campaign-dashboard.json
+    volumes:
+      - ./monitoring/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml:ro
+      - ./monitoring/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./monitoring/grafana/campaign-dashboard.json:/var/lib/grafana/dashboards/campaign-dashboard.json:ro
+    depends_on:
+      - prometheus
+
+volumes:
+  controller-data:
