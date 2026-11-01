@@ -27,13 +27,10 @@ state changes. What changes at this scale is the infrastructure around it.
 
 Upgrading 10 M devices at once is the real risk. A campaign becomes a sequence of waves:
 
-1. **Canary:** about 1,000 devices across models and regions. Wait until all are final.
-2. **Widen:** 1% → 10% → 50% → 100%, checking the failure rate between waves.
-3. **Halt per wave and per segment** (model, region, firmware lineage), so one bad device model
-   stops its own rollout without stopping everyone. The lesson from this project's run report
-   applies: the minimum sample must account for failures finishing sooner than successes.
-4. **Respect the customer:** upgrade in each region's night-time window, and limit concurrent
-   reboots per neighbourhood and per network element.
+1. **Canary:** Start with around 1,000 devices covering different models and regions. Wait for all upgrades to complete before proceeding.
+2. **Gradual rollout:** Increase the rollout in stages: 1% → 10% → 50% → 100%. Check the failure rate after each stage.
+3. **Stop when issues occur:** Monitor failures by device model, region and firmware version. Stop the rollout for the affected group if problems occur, without stopping the entire rollout. Ensure enough devices have completed the upgrade before evaluating failures.
+4. **Consider customers:** Schedule upgrades during night-time in each region. Limit the number of devices rebooting at the same time in a neighbourhood or on the same network element.
 
 ## Nudge REST API or something else?
 
