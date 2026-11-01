@@ -33,7 +33,7 @@ Upgrading 10 M devices at once is the real risk. A campaign becomes a sequence o
 4. **Consider customers:** Schedule upgrades during night-time in each region. Limit the number of devices rebooting at the same time in a neighbourhood or on the same network element.
 5. **Event tracking:** Record every device state change (device, campaign, old state, new state, reason and timestamp) in Kafka. The database remains the source of truth for the current state. Kafka provides events
 
-## Nudge REST API or something else?
+## Device Communication & Firmware Delivery
 
 Sending individual nudges to millions of devices is slow, and many gateways behind NAT cannot be reached directly. I would use three approaches:
 
