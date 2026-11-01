@@ -95,14 +95,14 @@ For quick experiments the simulator accepts `PERIODIC_INFORM_SEC`, `REBOOT_MAX_S
 
 | Method and path | Description | Responses |
 |---|---|---|
-| `POST /campaigns` | Create and start a campaign for every device on `deviceFilter.currentVersion` | `201` created · `400` no matching devices · `409` another campaign is RUNNING or PAUSED · `422` invalid body · `502` simulator unreachable |
+| `POST /campaigns` | Create and start a campaign for every device on `deviceFilter.currentVersion`. In the request parameters, `maxConcurrent` must be ≥ 1 and `failureThresholdPercent` between 0 and 100. | `201` created · `400` no matching devices · `409` another campaign is RUNNING or PAUSED · `422` invalid body · `502` simulator unreachable |
 | `GET /campaigns/{campaignId}` | Progress | `200` · `404` |
 | `POST /campaigns/{campaignId}/pause` | Stop issuing new work; in-flight devices finish | `200` (also if already paused) · `404` · `409` if COMPLETED or HALTED |
 | `POST /campaigns/{campaignId}/resume` | Continue a paused campaign | `200` (also if already running) · `404` · `409` if COMPLETED or HALTED |
 
-`maxConcurrent` must be ≥ 1 and `failureThresholdPercent` between 0 and 100.
 
-Example progress response:
+
+Example response for GET /campaigns/{campaignId} endpoint:
 
 ```json
 {
@@ -115,10 +115,21 @@ Example progress response:
 
 ### Device API's (called by the simulator)
 
-| Method and path | Description |
-|---|---|
-| `POST /devices/{deviceId}/inform` | Device session. The response carries any pending command, e.g. a DOWNLOAD |
-| `POST /devices/{deviceId}/command-response` | Device accepts or rejects a command |
+| Method and path | Description | Response |
+|---|---|---|
+| `POST /devices/{deviceId}/inform` | Device session (BOOT, PERIODIC, CONNECTION_REQUEST, TRANSFER_COMPLETE) | `200` with `{"commands": [...]}`: empty, or one DOWNLOAD for a device the scheduler has nudged |
+| `POST /devices/{deviceId}/command-response` | Device accepts or rejects a command | `200` with `{}` |
+
+Example response for POST /devices/{deviceId}/inform endpoint:
+
+```json
+{"commands": [{"type": "DOWNLOAD", "commandKey": "e26713ce-e466-4569-bf79-1cde2aff9cd7",
+               "url": "http://example.com/firmware-2.0.0.bin", "targetVersion": "2.0.0"}]}
+```
+
+Both endpoints answer `200` even for duplicate, late or unknown messages: these are recorded
+and ignored rather than rejected, so a device is never pushed into retrying a message that has
+already been handled.
 
 ### Operations
 
