@@ -31,6 +31,7 @@ Upgrading 10 M devices at once is the real risk. A campaign becomes a sequence o
 2. **Gradual rollout:** Increase the rollout in stages: 1% → 10% → 50% → 100%. Check the failure rate after each stage.
 3. **Stop when issues occur:** Monitor failures by device model, region and firmware version. Stop the rollout for the affected group if problems occur, without stopping the entire rollout. Ensure enough devices have completed the upgrade before evaluating failures.
 4. **Consider customers:** Schedule upgrades during night-time in each region. Limit the number of devices rebooting at the same time in a neighbourhood or on the same network element.
+5. **Event tracking:** Record every device state change (device, campaign, old state, new state, reason and timestamp) in Kafka. The database remains the source of truth for the current state. Kafka provides events
 
 ## Nudge REST API or something else?
 
@@ -41,24 +42,6 @@ Sending individual nudges to millions of devices is slow, and many gateways behi
 - **Rate-limited nudges:** Use a queue and worker pool for urgent updates, such as security fixes, with a global request limit.
 
 Firmware delivery: Use a CDN instead of the controller. Upgrading 10 million devices with a 50 MB image requires 500 TB of data transfer.
-
-## Tracking, recording and reporting
-
-- **Every state transition is published as an event** (device, campaign, from, to, reason,
-  timestamp) to a stream such as Kafka. The controller already logs exactly these transitions;
-  at scale they become events. The database stays the source of truth for each device's current
-  state; the stream is for everything downstream.
-- **During the campaign:** a consumer keeps running counts per campaign, wave, state, model and
-  region, so dashboards and the auto-halt check read pre-computed totals instead of counting rows.
-  Prometheus keeps the operational metrics (request rates, errors, latency, nudge and timeout
-  rates); per-device detail stays out of metric labels.
-- **After the campaign:** the event stream lands in a data warehouse for reporting: failure rate
-  by model, region and fault code; time to upgrade; devices that never reported; reverts. It also
-  gives a per-device history, so support staff can answer "what happened to this customer's
-  gateway?"
-- **Reconciliation:** devices left TIMED_OUT are re-checked later against the version they report
-  in subsequent informs, so the final report reflects what devices actually run, not just what the
-  campaign observed.
 
 ## Summary
 
