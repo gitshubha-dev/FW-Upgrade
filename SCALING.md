@@ -1,9 +1,5 @@
 # Scaling to 5–15 million devices
 
-The core design carries over unchanged: a per-device state machine stored in a database, a
-scheduler that admits work up to a limit, timeouts on every waiting state, and compare-and-set
-state changes. What changes at this scale is the infrastructure around it.
-
 ## Challenges with the existing setup
 
 | At 1,000 devices | At 10 million devices |
