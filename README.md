@@ -96,9 +96,9 @@ For quick experiments the simulator accepts `PERIODIC_INFORM_SEC`, `REBOOT_MAX_S
 | Method and path | Description | Responses |
 |---|---|---|
 | `POST /campaigns` | Create and start a campaign for every device on `deviceFilter.currentVersion` | `201` created · `400` no matching devices · `409` another campaign is RUNNING or PAUSED · `422` invalid body · `502` simulator unreachable |
-| `GET /campaigns/{id}` | Progress | `200` · `404` |
-| `POST /campaigns/{id}/pause` | Stop issuing new work; in-flight devices finish | `200` (also if already paused) · `404` · `409` if COMPLETED or HALTED |
-| `POST /campaigns/{id}/resume` | Continue a paused campaign | `200` (also if already running) · `404` · `409` if COMPLETED or HALTED |
+| `GET /campaigns/{campaignId}` | Progress | `200` · `404` |
+| `POST /campaigns/{campaignId}/pause` | Stop issuing new work; in-flight devices finish | `200` (also if already paused) · `404` · `409` if COMPLETED or HALTED |
+| `POST /campaigns/{campaignId}/resume` | Continue a paused campaign | `200` (also if already running) · `404` · `409` if COMPLETED or HALTED |
 
 `maxConcurrent` must be ≥ 1 and `failureThresholdPercent` between 0 and 100.
 
