@@ -67,8 +67,6 @@ DEVICE_COUNT=50 docker compose up -d        # smaller fleet
 docker compose down -v                      # stop and delete the database (clean rerun)
 ```
 
-With the simulator's default timings (reboots up to 4 minutes, check-ins every 5 minutes), a
-1,000-device campaign at `maxConcurrent: 100` takes roughly 25–35 minutes.
 
 ### Running without Docker
 
