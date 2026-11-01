@@ -39,9 +39,7 @@ simulator's hidden profiles:
 | reject | 36 | FAILED | REJECTED UNSUPPORTED_IMAGE |
 | offline | 48 | TIMED_OUT | No callback after 3 nudges |
 
-That accounts for all 1,000 devices. In total, 74 successes were decided from the reported version
-alone (BOOT on the target version) rather than from a TransferComplete, which is why
-requirement 4's "the reported firmwareVersion is evidence" mattered.
+That accounts for all 1,000 devices. In total, 74 successes were decided from the reported version,
 
 ### Observations from the dashboard
 
