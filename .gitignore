@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.db
+*.log
+*.dmg
+results/*_log.txt
