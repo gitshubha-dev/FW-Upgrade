@@ -16,7 +16,7 @@
 
 - **Use partitioning & sharding:** Replace SQLite with PostgreSQL or another database that supports row-level locking. Use DB indexes, partition by campaign and, if needed, distribute data by device ID across multiple databases.
 
-- **Distribute scheduler jobs:** Divide jobs across controller instances to avoid processing the same device twice. Use a shared database or Redis counter to enforce the overall limit on simultaneous firmware upgrades.
+- **Scheduler Coordination:** Distribute scheduler jobs across controller instances and use database locking to prevent duplicate processing of devices. Maintain a shared PostgreSQL/Redis counter to enforce a global limit on simultaneous firmware upgrades across all instances.
 
 ## Rollout in waves, not one campaign
 
