@@ -119,18 +119,3 @@ Creating a second campaign while the first was still running made both campaigns
 devices. Device messages are matched to the newest campaign, so the older one received nothing and
 its devices timed out even though they upgraded. The controller now refuses a second active
 campaign with `409`.
-
-### 5. The simulator's README run command needed a fix
-
-The simulator's docstring runs `scripts.fw_simulator:app`; for the provided file it is
-`device_simulator:app`.
-
----
-
-## Summary
-
-The controller determined every one of 1,000 devices' outcomes from device messages alone, without
-access to their hidden profiles, and matched the simulator's ground truth on all 848 successes and
-all 152 failures. A mid-campaign restart lost nothing the controller had recorded; the only effect
-was one failed device labelled TIMED_OUT instead of FAILED. The biggest lesson was about auto-halt:
-a minimum sample size has to account for failures becoming visible sooner than successes.
