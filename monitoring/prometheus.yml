@@ -1,0 +1,8 @@
+# Prometheus fetches the controller's /metrics page every 5 seconds and keeps the history.
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: controller
+    static_configs:
+      - targets: ["controller:8080"]

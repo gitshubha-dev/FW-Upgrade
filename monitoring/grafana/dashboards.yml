@@ -1,0 +1,7 @@
+# Tells Grafana to load dashboards from this folder at startup.
+apiVersion: 1
+providers:
+  - name: campaign
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
