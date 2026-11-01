@@ -40,7 +40,7 @@ Sending individual nudges to millions of devices is slow, and many gateways behi
 - **Persistent connections:** Use MQTT or WebSocket connections to push commands instantly. A few dozen brokers can handle 10–15 million devices. Use random reconnect intervals to avoid traffic spikes after outages.
 - **Periodic Inform:** For non-urgent upgrades, mark devices as PENDING and send instructions during their next scheduled check-in.
 - **Rate-limited nudges:** Use a queue and worker pool for urgent updates, such as security fixes, with a global request limit.
-- **Firmware delivery:** Use a CDN instead of the controller. Upgrading 10 million devices with a 50 MB image requires 500 TB of data transfer.
+- **Firmware delivery:** Use a CDN to distribute the firmware images across different regions
 
 ## Summary
 
