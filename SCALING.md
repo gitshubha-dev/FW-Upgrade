@@ -1,23 +1,22 @@
-# Scaling to 5–15 million devices
+# Scaling to 5–15 Million Devices
 
-## Challenges with the existing setup
+## Challenges with the Existing Setup
 
 | At 1,000 devices | At 10 million devices |
 |---|---|
-| One controller process | One process can't hold the inform rate: 10 M devices checking in daily is about 115/s on average, with large spikes after outages |
-| SQLite, one writer | Writes are serialized; a full table scan per tick is impossible |
-| Scheduler nudges one device at a time | Starting thousands of upgrades per minute needs parallel, rate-limited dispatch |
-| `GET /campaigns/{id}` counts rows | Counting 10 M rows per request is too slow |
-| One campaign over the whole fleet | A bad image could take down millions of homes before auto-halt reacts |
+| One controller process | Cannot handle the high volume of device check-ins and traffic spikes. |
+| SQLite with one writer | Writes happen one at a time. Scanning millions of records is too slow. |
+| Scheduler sends nudges one by one | Needs parallel processing with rate limits to start thousands of upgrades per minute. |
+| API counts campaign records on every request | Counting millions of records for every request is too slow. |
+| One campaign for all devices | A faulty firmware image could affect millions of homes before the auto-halt kicks in. |
 
-## Multiple controller instances
+## Multiple Controller Instances
 
-- **Stateless controllers behind a load balancer.** Any instance can handle any device's inform,
-  because all state is in the database.
-- **Postgres (or another shared, row-locking database)** in place of SQLite, with the existing
-  indexes on `(device_id, campaign_id)` and `(state, updated_at)`. At 15 M rows per campaign,
-  partition `device_upgrades` by campaign, and shard by device ID if one primary isn't enough.
-- **Divide scheduler jobs across instances to avoid duplicate processing** of devices and timeouts. Use a shared database/Redis counter to enforce the global concurrent firmware upgrade limit across all instances.
+- **Stateless controllers behind a load balancer:** Run multiple controller instances. Any instance can handle a device check-in because all instances share the same database.
+
+- **Use partitioning & sharding:** Replace SQLite with PostgreSQL or another database that supports row-level locking. Use DB indexes, partition by campaign and, if needed, distribute data by device ID across multiple databases.
+
+- **Distribute scheduler jobs:** Divide jobs across controller instances to avoid processing the same device twice. Use a shared database or Redis counter to enforce the overall limit on simultaneous firmware upgrades.
 
 ## Rollout in waves, not one campaign
 
