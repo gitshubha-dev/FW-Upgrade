@@ -35,7 +35,7 @@ This starts four containers:
 | controller | http://localhost:8080 | Interactive API docs at `/docs`, metrics at `/metrics` |
 | simulator | http://localhost:9000 | The provided device simulator, 1,000 devices on 1.0.0 |
 | prometheus | http://localhost:9090 | Scrapes `controller:8080/metrics` every 5 s |
-| grafana | http://localhost:3000 | Pre-provisioned "Firmware campaign" dashboard, no login |
+| grafana | http://localhost:3000 | Pre-provisioned "Firmware campaign" dashboard, no login. Note: Please wait a moment for the dashboard to load while Grafana completes its initialization. |
 
 Start a campaign:
 
