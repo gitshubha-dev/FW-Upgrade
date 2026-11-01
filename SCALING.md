@@ -42,9 +42,3 @@ Sending individual nudges to millions of devices is slow, and many gateways behi
 - **Rate-limited nudges:** Use a queue and worker pool for urgent updates, such as security fixes, with a global request limit.
 - **Firmware delivery:** Use a CDN to distribute the firmware images across different regions
 
-## Summary
-
-Many stateless controllers sharing a partitioned database, compare-and-set transitions, rollout
-in canary-first waves with per-segment halting, persistent device connections in place of nudges
-where possible, images from a CDN, and progress tracked through an event stream rather than by
-counting rows.
