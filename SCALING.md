@@ -34,21 +34,13 @@ Upgrading 10 M devices at once is the real risk. A campaign becomes a sequence o
 
 ## Nudge REST API or something else?
 
-The nudge (connection request) doesn't scale well: many gateways sit behind NAT or carrier-grade
-NAT and can't be reached, and nudging millions individually is slow. I would use three paths:
+Sending individual nudges to millions of devices is slow, and many gateways behind NAT cannot be reached directly. I would use three approaches:
 
-- **Persistent connections (TR-369 / USP over MQTT or WebSocket)** for devices that support it.
-  The device keeps a connection to a broker cluster, so the controller pushes commands instantly
-  with no nudge. Each broker holds hundreds of thousands of idle connections, so 10–15 M devices
-  need tens of brokers. Devices reconnect with random jitter to avoid storms after outages.
-- **Wait for the periodic inform** for non-urgent upgrades on legacy TR-069 devices: mark them
-  PENDING and hand out the order on their next scheduled check-in. It costs nothing, but takes up
-  to one inform interval.
-- **Rate-limited nudges** only for urgent cases (security fixes), dispatched from a queue by a
-  worker pool with a global rate limit, rather than from a scheduler loop.
+- **Persistent connections:** Use MQTT or WebSocket connections to push commands instantly. A few dozen brokers can handle 10–15 million devices. Use random reconnect intervals to avoid traffic spikes after outages.
+- **Periodic Inform:** For non-urgent upgrades, mark devices as PENDING and send instructions during their next scheduled check-in.
+- **Rate-limited nudges:** Use a queue and worker pool for urgent updates, such as security fixes, with a global request limit.
 
-The firmware image itself is served from a **CDN**, never from the controller: 10 M × 50 MB is
-500 TB of transfer.
+Firmware delivery: Use a CDN instead of the controller. Upgrading 10 million devices with a 50 MB image requires 500 TB of data transfer.
 
 ## Tracking, recording and reporting
 
